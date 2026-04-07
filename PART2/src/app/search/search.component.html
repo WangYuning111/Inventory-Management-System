@@ -1,0 +1,161 @@
+<div class="search-container">
+  <h1>🔍 Search Inventory</h1>
+  <p class="subtitle">Find items by name, category, or stock status</p>
+
+  <!-- Search Section -->
+  <section class="search-section">
+    <div class="search-box">
+      <div class="search-input-wrapper">
+        <span class="search-icon">🔍</span>
+        <input 
+          type="text" 
+          [(ngModel)]="searchTerm" 
+          placeholder="Search by item name..."
+          (keyup.enter)="search()"
+          class="search-input">
+        <button 
+          *ngIf="searchTerm" 
+          class="clear-btn" 
+          (click)="clearSearch()">
+          ×
+        </button>
+      </div>
+      <button class="btn btn-primary" (click)="search()">Search</button>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-row">
+      <div class="filter-group">
+        <label for="categoryFilter">Category:</label>
+        <select id="categoryFilter" [(ngModel)]="selectedCategory" (change)="search()">
+          <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="stockFilter">Stock Status:</label>
+        <select id="stockFilter" [(ngModel)]="selectedStockStatus" (change)="search()">
+          <option *ngFor="let status of stockStatuses" [value]="status">{{ status }}</option>
+        </select>
+      </div>
+
+      <div class="filter-group checkbox-filter">
+        <label class="checkbox-label">
+          <input 
+            type="checkbox" 
+            [(ngModel)]="popularOnly" 
+            (change)="search()">
+          <span>⭐ Popular Items Only</span>
+        </label>
+      </div>
+
+      <button class="btn btn-secondary reset-btn" (click)="resetFilters()">
+        Reset Filters
+      </button>
+    </div>
+  </section>
+
+  <!-- Results Section -->
+  <section class="results-section">
+    <!-- Results Header -->
+    <div class="results-header">
+      <h2>Search Results</h2>
+      <p class="results-count" *ngIf="hasSearched || filteredItems.length > 0">
+        {{ getResultMessage() }}
+      </p>
+    </div>
+
+    <!-- Results Table -->
+    <div class="table-container" *ngIf="filteredItems.length > 0">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th (click)="setSort('name')" class="sortable">
+              Item Name {{ getSortIndicator('name') }}
+            </th>
+            <th (click)="setSort('category')" class="sortable">
+              Category {{ getSortIndicator('category') }}
+            </th>
+            <th (click)="setSort('quantity')" class="sortable">
+              Quantity {{ getSortIndicator('quantity') }}
+            </th>
+            <th (click)="setSort('price')" class="sortable">
+              Price {{ getSortIndicator('price') }}
+            </th>
+            <th>Status</th>
+            <th>Popular</th>
+            <th>Supplier</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of filteredItems">
+            <td class="item-name">{{ item.name }}</td>
+            <td>
+              <span class="category-badge">{{ item.category }}</span>
+            </td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ formatCurrency(item.price) }}</td>
+            <td>
+              <span class="status-badge" [class]="getStockClass(item.stockStatus)">
+                {{ item.stockStatus }}
+              </span>
+            </td>
+            <td class="text-center">
+              <span class="popular-star" *ngIf="item.isPopular">⭐</span>
+              <span *ngIf="!item.isPopular">-</span>
+            </td>
+            <td>{{ item.supplierName }}</td>
+            <td class="comment-cell">{{ item.comment || '-' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="filteredItems.length === 0" class="empty-state">
+      <div class="empty-icon">📦</div>
+      <h3>No Items Found</h3>
+      <p *ngIf="hasSearched">
+        Try adjusting your search criteria or filters.
+      </p>
+      <p *ngIf="!hasSearched">
+        Enter a search term or use filters to find items.
+      </p>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="quick-stats" *ngIf="filteredItems.length > 0">
+      <div class="stat-item">
+        <span class="stat-label">Total Value:</span>
+        <span class="stat-value">
+          {{ formatCurrency(filteredItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)) }}
+        </span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Total Quantity:</span>
+        <span class="stat-value">
+          {{ filteredItems.reduce((sum, item) => sum + item.quantity, 0) }}
+        </span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Popular Items:</span>
+        <span class="stat-value">
+          {{ filteredItems.filter(item => item.isPopular).length }}
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tips Section -->
+  <section class="tips-section">
+    <h3>💡 Search Tips</h3>
+    <ul>
+      <li>Enter a partial name to find matching items (e.g., "mouse" finds "Wireless Mouse")</li>
+      <li>Use category filter to narrow down by product type</li>
+      <li>Check "Popular Items Only" to see best-selling products</li>
+      <li>Click on column headers to sort results</li>
+      <li>Leave search empty and click "Search" to see all items</li>
+    </ul>
+  </section>
+</div>

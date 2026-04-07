@@ -1,0 +1,173 @@
+<div class="privacy-container">
+  <header class="privacy-header">
+    <h1>🔒 Privacy & Security</h1>
+    <p class="last-updated">Last Updated: {{ lastUpdated }}</p>
+  </header>
+
+  <!-- Introduction -->
+  <section class="intro-section">
+    <div class="intro-card">
+      <h2>Our Commitment to Security</h2>
+      <p>
+        This Inventory Management System is designed with security and privacy as core principles. 
+        While this is a client-side application for demonstration purposes, we have implemented 
+        several security measures to protect your inventory data during use.
+      </p>
+    </div>
+  </section>
+
+  <!-- Security Measures Grid -->
+  <section class="security-measures">
+    <h2>🛡️ Key Security Measures</h2>
+    
+    <div class="measures-grid">
+      <div class="measure-card">
+        <div class="measure-icon">🔐</div>
+        <h3>Data Validation</h3>
+        <p>
+          All user inputs are validated before processing. Numeric fields only accept numbers, 
+          required fields cannot be left empty, and item IDs are verified for uniqueness to 
+          prevent duplicate entries.
+        </p>
+      </div>
+
+      <div class="measure-card">
+        <div class="measure-icon">✅</div>
+        <h3>Confirmation Prompts</h3>
+        <p>
+          Destructive actions like deleting items require explicit user confirmation. 
+          This prevents accidental data loss and gives users a chance to review their actions 
+          before permanent changes are made.
+        </p>
+      </div>
+
+      <div class="measure-card">
+        <div class="measure-icon">🔍</div>
+        <h3>Type Safety</h3>
+        <p>
+          Built with TypeScript, our application enforces strict type checking at compile time. 
+          This reduces runtime errors and ensures data integrity throughout the application.
+        </p>
+      </div>
+
+      <div class="measure-card">
+        <div class="measure-icon">⚡</div>
+        <h3>Client-Side Processing</h3>
+        <p>
+          All data processing occurs locally in your browser. No data is transmitted to external 
+          servers, ensuring complete privacy of your inventory information during the session.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Data Handling Section -->
+  <section class="data-handling">
+    <h2>📊 Data Handling Practices</h2>
+    
+    <div class="info-box">
+      <h3>Data Storage</h3>
+      <p>
+        This application operates entirely within your browser's memory. Inventory data is stored 
+        in JavaScript variables and persists only during your current browsing session. 
+        <strong>Data is lost when you close or refresh the browser</strong>, making this ideal 
+        for demonstration and testing purposes.
+      </p>
+    </div>
+
+    <div class="info-box">
+      <h3>Data Privacy</h3>
+      <p>
+        Since all processing occurs client-side, your inventory data never leaves your device. 
+        There are no external API calls, no cloud storage, and no data collection. Your business 
+        information remains completely private.
+      </p>
+    </div>
+
+    <div class="info-box">
+      <h3>Required vs Optional Fields</h3>
+      <p>
+        Our data model carefully distinguishes between required and optional fields:
+      </p>
+      <ul>
+        <li><strong>Required:</strong> Item ID, Name, Category, Quantity, Price, Supplier Name, Stock Status, Popular flag</li>
+        <li><strong>Optional:</strong> Comment field for additional notes</li>
+      </ul>
+      <p>
+        This ensures essential inventory data is always complete while allowing flexibility 
+        for optional annotations.
+      </p>
+    </div>
+  </section>
+
+  <!-- Best Practices Section -->
+  <section class="best-practices">
+    <h2>💡 Security Best Practices for Users</h2>
+    
+    <div class="practices-list">
+      <div class="practice-item">
+        <span class="practice-number">1</span>
+        <div class="practice-content">
+          <h4>Use Unique IDs</h4>
+          <p>Always assign unique Item IDs. The system enforces this, but careful planning of your ID scheme helps maintain organized inventory records.</p>
+        </div>
+      </div>
+
+      <div class="practice-item">
+        <span class="practice-number">2</span>
+        <div class="practice-content">
+          <h4>Regular Data Backups</h4>
+          <p>Since data doesn't persist between sessions, consider exporting important inventory data periodically if you plan to use this for extended periods.</p>
+        </div>
+      </div>
+
+      <div class="practice-item">
+        <span class="practice-number">3</span>
+        <div class="practice-content">
+          <h4>Verify Before Deleting</h4>
+          <p>Always double-check item names before deletion. The confirmation prompt is your safety net, but prevention is better than recovery.</p>
+        </div>
+      </div>
+
+      <div class="practice-item">
+        <span class="practice-number">4</span>
+        <div class="practice-content">
+          <h4>Keep Comments Professional</h4>
+          <p>While the comment field is optional, any information entered should follow professional standards as it may be viewed by other team members.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Limitations Section -->
+  <section class="limitations">
+    <h2>⚠️ Known Limitations</h2>
+    
+    <div class="limitation-alert">
+      <p>
+        <strong>Important:</strong> This is a demonstration application for educational purposes. 
+        The following limitations should be considered:
+      </p>
+      <ul>
+        <li>No persistent storage - data is lost on page refresh</li>
+        <li>No user authentication or access control</li>
+        <li>No encryption of data in memory</li>
+        <li>No audit logging of changes</li>
+        <li>No backup or export functionality in current version</li>
+      </ul>
+      <p>
+        For production use, these limitations would need to be addressed through additional 
+        security measures and backend integration.
+      </p>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="contact-section">
+    <h2>📧 Questions or Concerns?</h2>
+    <p>
+      If you have any questions about privacy or security in this application, 
+      please refer to the Help page or contact your system administrator.
+    </p>
+  </section>
+</div>
