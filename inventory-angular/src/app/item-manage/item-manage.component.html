@@ -1,0 +1,340 @@
+<div class="manage-container">
+  <h1>⚙️ Item Management</h1>
+  <p class="subtitle">Add, edit, and manage your inventory items</p>
+
+  <!-- Message Display -->
+  <div *ngIf="message" class="message" [class]="'message-' + message.type">
+    {{ message.text }}
+    <button class="message-close" (click)="clearMessage()">×</button>
+  </div>
+
+  <!-- Mode Selection Tabs -->
+  <div class="mode-tabs">
+    <button 
+      class="tab-btn" 
+      [class.active]="currentMode === 'view'"
+      (click)="setMode('view')">
+      📋 View All
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="currentMode === 'add'"
+      (click)="setMode('add')">
+      ➕ Add Item
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="currentMode === 'edit'"
+      (click)="setMode('edit')">
+      ✏️ Edit Item
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="currentMode === 'delete'"
+      (click)="setMode('delete')">
+      🗑️ Delete Item
+    </button>
+  </div>
+
+  <!-- VIEW ALL MODE -->
+  <div *ngIf="currentMode === 'view'" class="mode-content">
+    <h2>All Inventory Items</h2>
+    <div class="table-container" *ngIf="items.length > 0">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Popular</th>
+            <th>Supplier</th>
+            <th>Comment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of items">
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.category }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ formatCurrency(item.price) }}</td>
+            <td>
+              <span class="status-badge" [class]="getStockClass(item.stockStatus)">
+                {{ item.stockStatus }}
+              </span>
+            </td>
+            <td>
+              <span class="popular-badge" *ngIf="item.isPopular">⭐</span>
+              <span *ngIf="!item.isPopular">-</span>
+            </td>
+            <td>{{ item.supplierName }}</td>
+            <td>{{ item.comment || '-' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngIf="items.length === 0" class="empty-state">
+      <p>No items in inventory. Click "Add Item" to get started.</p>
+    </div>
+  </div>
+
+  <!-- ADD ITEM MODE -->
+  <div *ngIf="currentMode === 'add'" class="mode-content">
+    <h2>Add New Item</h2>
+    <form class="item-form" (ngSubmit)="addItem()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="itemId">Item ID <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="itemId" 
+            [(ngModel)]="formData.id" 
+            name="id"
+            placeholder="e.g., ITEM001"
+            required>
+          <small class="help-text">Unique identifier, cannot be changed later</small>
+        </div>
+        <div class="form-group">
+          <label for="itemName">Item Name <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="itemName" 
+            [(ngModel)]="formData.name" 
+            name="name"
+            placeholder="e.g., Wireless Mouse"
+            required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="category">Category <span class="required">*</span></label>
+          <select id="category" [(ngModel)]="formData.category" name="category" required>
+            <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="supplier">Supplier Name <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="supplier" 
+            [(ngModel)]="formData.supplierName" 
+            name="supplierName"
+            placeholder="e.g., TechCorp"
+            required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="quantity">Quantity <span class="required">*</span></label>
+          <input 
+            type="number" 
+            id="quantity" 
+            [(ngModel)]="formData.quantity" 
+            name="quantity"
+            min="0"
+            placeholder="0"
+            required>
+          <small class="help-text">Stock status is calculated automatically</small>
+        </div>
+        <div class="form-group">
+          <label for="price">Price (AUD) <span class="required">*</span></label>
+          <input 
+            type="number" 
+            id="price" 
+            [(ngModel)]="formData.price" 
+            name="price"
+            min="0"
+            step="0.01"
+            placeholder="0.00"
+            required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input 
+              type="checkbox" 
+              [(ngModel)]="formData.isPopular" 
+              name="isPopular">
+            <span>Mark as Popular Item ⭐</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="comment">Comment <span class="optional">(optional)</span></label>
+        <textarea 
+          id="comment" 
+          [(ngModel)]="formData.comment" 
+          name="comment"
+          rows="3"
+          placeholder="Add any additional notes about this item..."></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Add Item</button>
+        <button type="button" class="btn btn-secondary" (click)="resetForm()">Clear Form</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- EDIT ITEM MODE -->
+  <div *ngIf="currentMode === 'edit'" class="mode-content">
+    <h2>Edit Item</h2>
+    
+    <!-- Search Section -->
+    <div class="search-section" *ngIf="!foundItem">
+      <label>Search by Item Name:</label>
+      <div class="search-input-group">
+        <input 
+          type="text" 
+          [(ngModel)]="searchName" 
+          placeholder="Enter item name to edit..."
+          (keyup.enter)="searchItem()">
+        <button class="btn btn-primary" (click)="searchItem()">Search</button>
+      </div>
+    </div>
+
+    <!-- Found Item Display -->
+    <div *ngIf="foundItem" class="found-item-info">
+      <h3>Editing: {{ foundItem.name }}</h3>
+      <p><strong>ID:</strong> {{ foundItem.id }} (cannot be changed)</p>
+    </div>
+
+    <!-- Edit Form -->
+    <form *ngIf="foundItem" class="item-form" (ngSubmit)="updateItem()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="editName">Item Name <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="editName" 
+            [(ngModel)]="formData.name" 
+            name="name"
+            required>
+        </div>
+        <div class="form-group">
+          <label for="editCategory">Category <span class="required">*</span></label>
+          <select id="editCategory" [(ngModel)]="formData.category" name="category" required>
+            <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="editSupplier">Supplier Name <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="editSupplier" 
+            [(ngModel)]="formData.supplierName" 
+            name="supplierName"
+            required>
+        </div>
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input 
+              type="checkbox" 
+              [(ngModel)]="formData.isPopular" 
+              name="isPopular">
+            <span>Popular Item ⭐</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="editQuantity">Quantity <span class="required">*</span></label>
+          <input 
+            type="number" 
+            id="editQuantity" 
+            [(ngModel)]="formData.quantity" 
+            name="quantity"
+            min="0"
+            required>
+          <small class="help-text">Current status: <span [class]="getStockClass(foundItem.stockStatus)">{{ foundItem.stockStatus }}</span></small>
+        </div>
+        <div class="form-group">
+          <label for="editPrice">Price (AUD) <span class="required">*</span></label>
+          <input 
+            type="number" 
+            id="editPrice" 
+            [(ngModel)]="formData.price" 
+            name="price"
+            min="0"
+            step="0.01"
+            required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="editComment">Comment <span class="optional">(optional)</span></label>
+        <textarea 
+          id="editComment" 
+          [(ngModel)]="formData.comment" 
+          name="comment"
+          rows="3"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Update Item</button>
+        <button type="button" class="btn btn-secondary" (click)="setMode('edit')">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- DELETE ITEM MODE -->
+  <div *ngIf="currentMode === 'delete'" class="mode-content">
+    <h2>Delete Item</h2>
+    
+    <!-- Search Section -->
+    <div class="search-section" *ngIf="!foundItem">
+      <label>Search by Item Name to Delete:</label>
+      <div class="search-input-group">
+        <input 
+          type="text" 
+          [(ngModel)]="searchName" 
+          placeholder="Enter item name to delete..."
+          (keyup.enter)="searchItem()">
+        <button class="btn btn-primary" (click)="searchItem()">Search</button>
+      </div>
+    </div>
+
+    <!-- Found Item for Deletion -->
+    <div *ngIf="foundItem && !showConfirmDialog" class="delete-preview">
+      <h3>Item Found:</h3>
+      <div class="item-details">
+        <p><strong>ID:</strong> {{ foundItem.id }}</p>
+        <p><strong>Name:</strong> {{ foundItem.name }}</p>
+        <p><strong>Category:</strong> {{ foundItem.category }}</p>
+        <p><strong>Quantity:</strong> {{ foundItem.quantity }}</p>
+        <p><strong>Price:</strong> {{ formatCurrency(foundItem.price) }}</p>
+        <p><strong>Status:</strong> <span [class]="getStockClass(foundItem.stockStatus)">{{ foundItem.stockStatus }}</span></p>
+        <p><strong>Supplier:</strong> {{ foundItem.supplierName }}</p>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-danger" (click)="confirmDelete()">Delete This Item</button>
+        <button class="btn btn-secondary" (click)="setMode('delete')">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Confirmation Dialog -->
+    <div *ngIf="showConfirmDialog" class="confirm-dialog">
+      <div class="confirm-content">
+        <h3>⚠️ Confirm Deletion</h3>
+        <p>Are you sure you want to delete <strong>"{{ foundItem?.name }}"</strong>?</p>
+        <p class="warning-text">This action cannot be undone.</p>
+        <div class="confirm-actions">
+          <button class="btn btn-danger" (click)="deleteItem()">Yes, Delete</button>
+          <button class="btn btn-secondary" (click)="cancelDelete()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

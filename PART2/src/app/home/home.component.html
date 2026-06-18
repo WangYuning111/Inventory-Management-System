@@ -1,0 +1,162 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1>📦 {{ appName }}</h1>
+      <p class="hero-description">{{ appDescription }}</p>
+      <div class="hero-actions">
+        <a routerLink="/manage" class="btn btn-primary">Manage Items</a>
+        <a routerLink="/search" class="btn btn-secondary">Search Inventory</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stock Alerts Section -->
+  <section class="alerts-section" *ngIf="stockAlerts.length > 0">
+    <h2>⚠️ Stock Alerts</h2>
+    <div class="alerts-grid">
+      <div *ngFor="let alert of stockAlerts" class="alert-item" [class.alert-danger]="alert.type === 'danger'" [class.alert-warning]="alert.type === 'warning'">
+        <div class="alert-icon">{{ alert.type === 'danger' ? '🔴' : '🟡' }}</div>
+        <div class="alert-content">
+          <div class="alert-item-name">{{ alert.item.name }}</div>
+          <div class="alert-details">
+            <span>Qty: {{ alert.item.quantity }}</span>
+            <span class="status-badge" [class]="getStockClass(alert.item.stockStatus)">{{ alert.item.stockStatus }}</span>
+          </div>
+        </div>
+        <a [routerLink]="['/manage']" [queryParams]="{search: alert.item.name}" class="btn btn-small">View</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Statistics Dashboard -->
+  <section class="stats-section" *ngIf="stats">
+    <h2>📊 Inventory Dashboard</h2>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">📦</div>
+        <div class="stat-value">{{ stats.totalItems }}</div>
+        <div class="stat-label">Total Items</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📈</div>
+        <div class="stat-value">{{ stats.totalStock }}</div>
+        <div class="stat-label">Total Stock</div>
+      </div>
+      <div class="stat-card success">
+        <div class="stat-icon">✅</div>
+        <div class="stat-value">{{ stats.inStock }}</div>
+        <div class="stat-label">In Stock</div>
+      </div>
+      <div class="stat-card warning" *ngIf="stats.lowStock > 0">
+        <div class="stat-icon">⚠️</div>
+        <div class="stat-value">{{ stats.lowStock }}</div>
+        <div class="stat-label">Low Stock</div>
+      </div>
+      <div class="stat-card danger" *ngIf="stats.outOfStock > 0">
+        <div class="stat-icon">❌</div>
+        <div class="stat-value">{{ stats.outOfStock }}</div>
+        <div class="stat-label">Out of Stock</div>
+      </div>
+      <div class="stat-card popular">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-value">{{ stats.popularItems }}</div>
+        <div class="stat-label">Popular Items</div>
+      </div>
+      <div class="stat-card value">
+        <div class="stat-icon">💰</div>
+        <div class="stat-value">{{ formatCurrency(stats.totalValue) }}</div>
+        <div class="stat-label">Total Value</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recent Activity Section -->
+  <section class="activity-section" *ngIf="recentActivity.length > 0">
+    <h2>🕐 Recent Activity</h2>
+    <div class="activity-list">
+      <div *ngFor="let activity of recentActivity" class="activity-item">
+        <div class="activity-icon">{{ getActionIcon(activity.action) }}</div>
+        <div class="activity-content">
+          <span class="activity-action">{{ activity.action }}</span>
+          <span class="activity-item-name">{{ activity.itemName }}</span>
+          <span class="activity-details">{{ activity.details }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Popular Items Section -->
+  <section class="popular-section" *ngIf="popularItems.length > 0">
+    <h2>⭐ Popular Items</h2>
+    <p class="section-description">These items are marked as popular in your inventory:</p>
+    
+    <div class="items-table-container">
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Supplier</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of popularItems">
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.category }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ formatCurrency(item.price) }}</td>
+            <td>
+              <span class="status-badge" [class]="getStockClass(item.stockStatus)">
+                {{ item.stockStatus }}
+              </span>
+            </td>
+            <td>{{ item.supplierName }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Quick Actions -->
+  <section class="quick-actions">
+    <h2>🚀 Quick Actions</h2>
+    <div class="actions-grid">
+      <a routerLink="/manage" [queryParams]="{mode: 'add'}" class="action-card">
+        <div class="action-icon">➕</div>
+        <h3>Add Item</h3>
+        <p>Add new inventory items</p>
+      </a>
+      <a routerLink="/manage" [queryParams]="{mode: 'edit'}" class="action-card">
+        <div class="action-icon">✏️</div>
+        <h3>Edit Item</h3>
+        <p>Update existing items</p>
+      </a>
+      <a routerLink="/search" class="action-card">
+        <div class="action-icon">🔍</div>
+        <h3>Search</h3>
+        <p>Find items quickly</p>
+      </a>
+      <a routerLink="/manage" [queryParams]="{mode: 'import'}" class="action-card">
+        <div class="action-icon">📥</div>
+        <h3>Import</h3>
+        <p>Bulk import data</p>
+      </a>
+      <a routerLink="/manage" [queryParams]="{mode: 'export'}" class="action-card">
+        <div class="action-icon">📤</div>
+        <h3>Export</h3>
+        <p>Download inventory</p>
+      </a>
+      <a routerLink="/help" class="action-card">
+        <div class="action-icon">❓</div>
+        <h3>Help</h3>
+        <p>Get support</p>
+      </a>
+    </div>
+  </section>
+</div>

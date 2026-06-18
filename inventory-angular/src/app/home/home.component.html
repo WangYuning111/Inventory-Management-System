@@ -1,0 +1,119 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1>📦 {{ appName }}</h1>
+      <p class="hero-description">{{ appDescription }}</p>
+      <div class="hero-actions">
+        <a routerLink="/manage" class="btn btn-primary">Manage Items</a>
+        <a routerLink="/search" class="btn btn-secondary">Search Inventory</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Statistics Dashboard -->
+  <section class="stats-section" *ngIf="stats">
+    <h2>📊 Inventory Dashboard</h2>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">📦</div>
+        <div class="stat-value">{{ stats.totalItems }}</div>
+        <div class="stat-label">Total Items</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📈</div>
+        <div class="stat-value">{{ stats.totalStock }}</div>
+        <div class="stat-label">Total Stock</div>
+      </div>
+      <div class="stat-card success">
+        <div class="stat-icon">✅</div>
+        <div class="stat-value">{{ stats.inStock }}</div>
+        <div class="stat-label">In Stock</div>
+      </div>
+      <div class="stat-card warning">
+        <div class="stat-icon">⚠️</div>
+        <div class="stat-value">{{ stats.lowStock }}</div>
+        <div class="stat-label">Low Stock</div>
+      </div>
+      <div class="stat-card danger">
+        <div class="stat-icon">❌</div>
+        <div class="stat-value">{{ stats.outOfStock }}</div>
+        <div class="stat-label">Out of Stock</div>
+      </div>
+      <div class="stat-card popular">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-value">{{ stats.popularItems }}</div>
+        <div class="stat-label">Popular Items</div>
+      </div>
+      <div class="stat-card value">
+        <div class="stat-icon">💰</div>
+        <div class="stat-value">{{ formatCurrency(stats.totalValue) }}</div>
+        <div class="stat-label">Total Value</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Popular Items Section -->
+  <section class="popular-section" *ngIf="popularItems.length > 0">
+    <h2>⭐ Popular Items</h2>
+    <p class="section-description">These items are marked as popular in your inventory:</p>
+    
+    <div class="items-table-container">
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Supplier</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of popularItems">
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.category }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ formatCurrency(item.price) }}</td>
+            <td>
+              <span class="status-badge" [class]="getStockClass(item.stockStatus)">
+                {{ item.stockStatus }}
+              </span>
+            </td>
+            <td>{{ item.supplierName }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Quick Actions -->
+  <section class="quick-actions">
+    <h2>🚀 Quick Actions</h2>
+    <div class="actions-grid">
+      <a routerLink="/manage" class="action-card">
+        <div class="action-icon">➕</div>
+        <h3>Add Item</h3>
+        <p>Add new inventory items</p>
+      </a>
+      <a routerLink="/manage" class="action-card">
+        <div class="action-icon">✏️</div>
+        <h3>Edit Item</h3>
+        <p>Update existing items</p>
+      </a>
+      <a routerLink="/search" class="action-card">
+        <div class="action-icon">🔍</div>
+        <h3>Search</h3>
+        <p>Find items by name</p>
+      </a>
+      <a routerLink="/privacy" class="action-card">
+        <div class="action-icon">🔒</div>
+        <h3>Security</h3>
+        <p>Privacy information</p>
+      </a>
+    </div>
+  </section>
+</div>

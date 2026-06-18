@@ -1,0 +1,134 @@
+<div class="help-container">
+  <header class="help-header">
+    <h1>❓ Help & Support</h1>
+    <p class="subtitle">Find answers to common questions and troubleshooting tips</p>
+  </header>
+
+  <!-- Quick Navigation -->
+  <nav class="quick-nav">
+    <a href="#faq" class="nav-link">📋 FAQs</a>
+    <a href="#troubleshooting" class="nav-link">🔧 Troubleshooting</a>
+    <a href="#contact" class="nav-link">📧 Contact</a>
+  </nav>
+
+  <!-- FAQs Section -->
+  <section id="faq" class="faq-section">
+    <div class="section-header">
+      <h2>📋 Frequently Asked Questions</h2>
+      <div class="faq-controls">
+        <button class="btn btn-text" (click)="expandAll()">Expand All</button>
+        <button class="btn btn-text" (click)="collapseAll()">Collapse All</button>
+      </div>
+    </div>
+
+    <!-- Search Box -->
+    <div class="faq-search">
+      <div class="search-input-wrapper">
+        <span class="search-icon">🔍</span>
+        <input 
+          type="text" 
+          [(ngModel)]="searchTerm" 
+          placeholder="Search FAQs..."
+          class="search-input">
+        <button 
+          *ngIf="searchTerm" 
+          class="clear-btn" 
+          (click)="clearSearch()">
+          ×
+        </button>
+      </div>
+    </div>
+
+    <!-- FAQ List -->
+    <div class="faq-list" *ngIf="getFilteredFAQs().length > 0">
+      <div 
+        class="faq-item" 
+        *ngFor="let faq of getFilteredFAQs(); let i = index"
+        [class.open]="faq.isOpen">
+        <button class="faq-question" (click)="toggleFAQ(i)">
+          <span class="faq-icon">{{ faq.isOpen ? '📖' : '📘' }}</span>
+          <span class="faq-text">{{ faq.question }}</span>
+          <span class="faq-toggle">{{ faq.isOpen ? '−' : '+' }}</span>
+        </button>
+        <div class="faq-answer" *ngIf="faq.isOpen">
+          <p>{{ faq.answer }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- No Results -->
+    <div class="no-results" *ngIf="getFilteredFAQs().length === 0">
+      <p>No FAQs found matching "{{ searchTerm }}"</p>
+      <button class="btn btn-secondary" (click)="clearSearch()">Clear Search</button>
+    </div>
+  </section>
+
+  <!-- Troubleshooting Section -->
+  <section id="troubleshooting" class="troubleshooting-section">
+    <h2>🔧 Troubleshooting Guide</h2>
+    <p class="section-intro">
+      Having issues? Check these common problems and their solutions:
+    </p>
+
+    <div class="troubleshooting-list">
+      <div class="trouble-item" *ngFor="let item of troubleshooting">
+        <div class="trouble-header">
+          <span class="trouble-icon">⚠️</span>
+          <h3>{{ item.problem }}</h3>
+        </div>
+        <div class="trouble-solutions">
+          <h4>Solutions:</h4>
+          <ul>
+            <li *ngFor="let solution of item.solutions">{{ solution }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tips Section -->
+  <section class="tips-section">
+    <h2>💡 Pro Tips</h2>
+    <div class="tips-grid">
+      <div class="tip-card">
+        <span class="tip-icon">⚡</span>
+        <h4>Quick Search</h4>
+        <p>Use partial names when searching - "mouse" will find "Wireless Mouse"</p>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">🎯</span>
+        <h4>Popular Items</h4>
+        <p>Mark best-sellers as "Popular" to quickly identify high-priority stock</p>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">📝</span>
+        <h4>Comments</h4>
+        <p>Use comments to add notes like "Restock next week" or "Discontinued"</p>
+      </div>
+      <div class="tip-card">
+        <span class="tip-icon">🔢</span>
+        <h4>ID Convention</h4>
+        <p>Use a consistent naming pattern like ITEM001, ITEM002 for easy management</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="contact-section">
+    <h2>📧 Still Need Help?</h2>
+    <div class="contact-card">
+      <p>
+        If you couldn't find the answer you were looking for, please contact your 
+        system administrator or instructor for assistance.
+      </p>
+      <div class="contact-info">
+        <p><strong>System Information:</strong></p>
+        <ul>
+          <li>Application: Inventory Management System</li>
+          <li>Version: 1.0.0 (Assessment Demo)</li>
+          <li>Platform: Angular + TypeScript</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>

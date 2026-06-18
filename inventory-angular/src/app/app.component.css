@@ -1,0 +1,92 @@
+/* 全局样式重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 导航栏样式 */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 0 2rem;
+  height: 60px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* 品牌标识 */
+.nav-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+}
+
+.nav-brand span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 导航链接容器 */
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+}
+
+/* 导航链接样式 */
+.nav-links li a {
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+/* 悬停效果 */
+.nav-links li a:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* 当前激活状态 */
+.nav-links li a.active {
+  color: white;
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* 内容容器 */
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+/* 响应式设计 - 移动端适配 */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    height: auto;
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .nav-links {
+    gap: 1rem;
+  }
+
+  .nav-links li a {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+  }
+}
