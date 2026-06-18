@@ -576,8 +576,8 @@ Batch selection and deletion of products to improve management efficiency.
 
 **Developer**
 
-- Name: Wang Yuning (Yuning Wang)
-- Email: wangyuning@example.com
+- Name:Yuning Wang
+- Email: 13043716833@163.com
 
 ---
 
